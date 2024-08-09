@@ -50,3 +50,55 @@
     z-index: 1000;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   }
+#reset-game, #play-again {
+    font-size: 18px;
+    padding: 12px 25px;
+    margin-top: 15px;
+    cursor: pointer;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+  }
+  #reset-game:hover, #play-again:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  }
+  h1 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 32px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <div id="game-container">
+    <h1>Jenga Physics Challenge Deluxe</h1>
+    <div id="score">Score: 0</div>
+    <div id="blocks-left">Blocks left: 54</div>
+    <div id="blocks-in-box">Blocks in box: 0</div>
+    <div id="jenga-tower"></div>
+    <button id="reset-game">Reset Game</button>
+  </div>
+  <div id="game-over">
+    <h2>Game Over!</h2>
+    <p>Your final score: <span id="final-score"></span></p>
+    <button id="play-again">Play Again</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"></script>
+  <script>
+    const { Engine, Render, World, Bodies, Body, Events, Mouse, MouseConstraint, Composite } = Matter;
+
+    const tower = document.getElementById('jenga-tower');
+    const scoreElement = document.getElementById('score');
+    const blocksLeftElement = document.getElementById('blocks-left');
+    const blocksInBoxElement = document.getElementById('blocks-in-box');
+    const gameOverElement = document.getElementById('game-over');
+    const finalScoreElement = document.getElementById('final-score');
+    const resetButton = document.getElementById('reset-game');
+    const playAgainButton = document.getElementById('play-again');
