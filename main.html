@@ -102,3 +102,59 @@
     const finalScoreElement = document.getElementById('final-score');
     const resetButton = document.getElementById('reset-game');
     const playAgainButton = document.getElementById('play-again');
+
+    let engine, render, world, mouseConstraint;
+    let blocks = [];
+    let score = 0;
+    let blocksInBox = 0;
+    let gameOver = false;
+
+    const canvasWidth = 600;
+    const canvasHeight = 800;
+
+    function initGame() {
+      if (world) {
+        World.clear(world);
+        Engine.clear(engine);
+        Render.stop(render);
+        render.canvas.remove();
+        render.canvas = null;
+        render.context = null;
+        render.textures = {};
+      }
+
+      engine = Engine.create({
+        gravity: { x: 0, y: 0.5 }
+      });
+      world = engine.world;
+
+      render = Render.create({
+        element: tower,
+        engine: engine,
+        options: {
+          width: canvasWidth,
+          height: canvasHeight,
+          wireframes: false,
+          background: '#f0e6d2'
+        }
+      });
+
+      Render.run(render);
+      
+      setTimeout(() => {
+        Engine.run(engine);
+      }, 1000);
+
+      const boxWidth = 350;
+      const boxHeight = 220;
+      const boxOptions = { 
+        isStatic: true, 
+        render: { 
+          fillStyle: '#8B4513',
+          strokeStyle: '#654321',
+          lineWidth: 2
+        },
+        chamfer: { radius: 10 }
+      };
+      const box = Bodies.rectangle(canvasWidth / 2, canvasHeight - boxHeight / 2, boxWidth, boxHeight, boxOptions);
+      World.add(world, box);
