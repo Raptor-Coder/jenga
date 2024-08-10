@@ -208,3 +208,59 @@
             blocks.push(block);
             World.add(world, block);
           }
+} else {
+          const block = Bodies.rectangle(canvasWidth / 2, y, 240, blockHeight, blockOptions);
+          blocks.push(block);
+          World.add(world, block);
+        }
+      }
+      updateBlocksLeft();
+    }
+
+    function removeBlock(clickPosition) {
+      if (gameOver) return;
+
+      const clickedBody = Matter.Query.point(blocks, clickPosition)[0];
+      if (clickedBody) {
+        World.remove(world, clickedBody);
+        blocks = blocks.filter(block => block !== clickedBody);
+        updateBlocksLeft();
+      }
+    }
+
+    function updateScore() {
+      score++;
+      scoreElement.textContent = `Score: ${score}`;
+    }
+
+    function updateBlocksLeft() {
+      blocksLeftElement.textContent = `Blocks left: ${blocks.length}`;
+    }
+
+    function updateBlocksInBox() {
+      blocksInBoxElement.textContent = `Blocks in box: ${blocksInBox}`;
+    }
+
+    function checkBlocks() {
+      const boxBottom = canvasHeight - 110;
+      const boxLeft = canvasWidth / 2 - 175;
+      const boxRight = canvasWidth / 2 + 175;
+
+      blocks.forEach(block => {
+        if (block.position.y > boxBottom && block.position.x > boxLeft && block.position.x < boxRight) {
+          if (!block.inBox) {
+            block.inBox = true;
+            blocksInBox++;
+            updateScore();
+            updateBlocksInBox();
+          }
+        } else {
+          block.inBox = false;
+        }
+      });
+
+      const fallenBlocks = blocks.filter(block => block.position.y > canvasHeight);
+      if (fallenBlocks.length > 0) {
+        gameOver = true;
+        finalScoreElement.textContent = score;
+        gameOverElement.style.display = 'block';
