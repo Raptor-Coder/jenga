@@ -158,3 +158,53 @@
       };
       const box = Bodies.rectangle(canvasWidth / 2, canvasHeight - boxHeight / 2, boxWidth, boxHeight, boxOptions);
       World.add(world, box);
+
+      // Add walls
+      const wallOptions = { isStatic: true, render: { fillStyle: '#654321' } };
+      const leftWall = Bodies.rectangle(0, canvasHeight / 2, 20, canvasHeight, wallOptions);
+      const rightWall = Bodies.rectangle(canvasWidth, canvasHeight / 2, 20, canvasHeight, wallOptions);
+      const topWall = Bodies.rectangle(canvasWidth / 2, 0, canvasWidth, 20, wallOptions);
+      World.add(world, [leftWall, rightWall, topWall]);
+
+      const mouse = Mouse.create(render.canvas);
+      mouseConstraint = MouseConstraint.create(engine, {
+        mouse: mouse,
+        constraint: {
+          stiffness: 0.2,
+          render: { visible: false }
+        }
+      });
+      World.add(world, mouseConstraint);
+
+      createTower();
+
+      Events.on(mouseConstraint, 'mouseup', function(event) {
+        const clickedBody = event.mouse.mouseupPosition;
+        removeBlock(clickedBody);
+      });
+
+      Events.on(engine, 'afterUpdate', checkBlocks);
+    }
+
+    function createTower() {
+      const blockWidth = 80;
+      const blockHeight = 30;
+      const blockOptions = { 
+        friction: 0.8,
+        restitution: 0.05,
+        density: 0.001,
+        render: { 
+          fillStyle: '#DEB887',
+          strokeStyle: '#8B4513',
+          lineWidth: 2
+        }
+      };
+
+      for (let row = 0; row < 18; row++) {
+        const y = canvasHeight - 350 - (row * blockHeight);
+        if (row % 2 === 0) {
+          for (let col = 0; col < 3; col++) {
+            const block = Bodies.rectangle(220 + col * blockWidth, y, blockWidth, blockHeight, blockOptions);
+            blocks.push(block);
+            World.add(world, block);
+          }
