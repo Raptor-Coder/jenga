@@ -264,3 +264,34 @@
         gameOver = true;
         finalScoreElement.textContent = score;
         gameOverElement.style.display = 'block';
+
+        fallenBlocks.forEach(block => World.remove(world, block));
+        blocks = blocks.filter(block => block.position.y <= canvasHeight);
+      }
+
+      if (blocks.length === 0) {
+        gameOver = true;
+        finalScoreElement.textContent = score;
+        gameOverElement.style.display = 'block';
+      }
+
+      updateBlocksLeft();
+    }
+
+    function resetGame() {
+      gameOver = false;
+      score = 0;
+      blocksInBox = 0;
+      blocks = [];
+      scoreElement.textContent = 'Score: 0';
+      blocksInBoxElement.textContent = 'Blocks in box: 0';
+      gameOverElement.style.display = 'none';
+      initGame();
+    }
+
+    resetButton.addEventListener('click', resetGame);
+    playAgainButton.addEventListener('click', resetGame);
+
+    initGame();
+  </script>
+</body></html>
